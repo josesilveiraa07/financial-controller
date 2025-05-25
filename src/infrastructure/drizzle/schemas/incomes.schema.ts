@@ -1,6 +1,7 @@
 import { relations } from 'drizzle-orm';
 import {
   decimal,
+  integer,
   pgTable,
   timestamp,
   uuid,
@@ -15,6 +16,7 @@ export const incomesTable = pgTable('incomes', {
     .notNull(),
   description: varchar('description', { length: 255 }).notNull(),
   amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
+  frequency: integer('frequency').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });

@@ -5,6 +5,7 @@ export class IncomeEntity {
   userId: string;
   description: string;
   amount: Decimal;
+  frequency: number;
   createdAt: Date;
   updatedAt: Date;
 

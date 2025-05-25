@@ -21,6 +21,7 @@ export class IncomesRepository implements IncomesRepositoryInterface {
           userId: income.userId,
           description: income.description,
           amount: new Decimal(income.amount),
+          frequency: income.frequency,
           createdAt: income.createdAt,
           updatedAt: income.updatedAt,
         }),

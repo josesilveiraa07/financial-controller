@@ -42,6 +42,7 @@ export class UsersRepository implements UsersRepositoryInterface {
     const financialData = new UserFinancialInfoEntity({
       userId: user.users.id,
       wage: new Decimal(user.user_financial_info?.wage ?? 0),
+      balance: new Decimal(user.user_financial_info?.balance ?? 0),
     });
 
     return new UserEntity({
@@ -76,6 +77,7 @@ export class UsersRepository implements UsersRepositoryInterface {
     const financialData = new UserFinancialInfoEntity({
       userId: user.users.id,
       wage: new Decimal(user.user_financial_info?.wage ?? 0),
+      balance: new Decimal(user.user_financial_info?.balance ?? 0),
     });
 
     return new UserEntity({

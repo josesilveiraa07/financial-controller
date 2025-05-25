@@ -5,6 +5,7 @@ import { usersTable } from './users.schema';
 export const userFinancialInfoTable = pgTable('user_financial_info', {
   userId: uuid('user_id').references(() => usersTable.id),
   wage: decimal('wage', { precision: 10, scale: 2 }),
+  balance: decimal('balance', { precision: 10, scale: 2 }),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });
