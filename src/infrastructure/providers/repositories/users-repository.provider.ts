@@ -4,7 +4,7 @@ import { UsersRepository } from 'src/infrastructure/repositories';
 
 export const UsersRepositoryProvider: Provider = {
   provide: UsersRepository,
-  inject: ['DRIZZLE_CONNECTION'],
+  inject: ['DATABASE_CONNECTION'],
   useFactory: (db: NodePgDatabase) => {
     return new UsersRepository(db);
   },
