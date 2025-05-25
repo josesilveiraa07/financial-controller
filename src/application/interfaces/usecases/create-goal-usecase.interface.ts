@@ -3,7 +3,10 @@ import { CreateGoalInput } from '../repositories';
 import { UseCase } from './usecase.interface';
 
 export type CreateGoalUseCaseInput = CreateGoalInput;
-export type CreateGoalUseCaseOutput = GoalEntity;
+export type CreateGoalUseCaseOutput = {
+  goal: GoalEntity;
+  shouldWarnAboutGoalsAmount: boolean;
+};
 
 export type CreateGoalUseCaseInterface = UseCase<
   CreateGoalUseCaseInput,

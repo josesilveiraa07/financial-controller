@@ -1,11 +1,12 @@
+import Decimal from 'decimal.js';
 import { and, eq } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import {
   CreateUserInput,
   UsersRepositoryInterface,
 } from 'src/application/interfaces/repositories';
-import { UserEntity } from 'src/domain/entities';
-import { usersTable } from '../drizzle/schemas';
+import { UserEntity, UserFinancialInfoEntity } from 'src/domain/entities';
+import { userFinancialInfoTable, usersTable } from '../drizzle/schemas';
 
 export class UsersRepository implements UsersRepositoryInterface {
   constructor(private readonly db: NodePgDatabase) {}
@@ -28,9 +29,25 @@ export class UsersRepository implements UsersRepositoryInterface {
     const [user] = await this.db
       .select()
       .from(usersTable)
-      .where(eq(usersTable.id, id));
+      .where(eq(usersTable.id, id))
+      .leftJoin(
+        userFinancialInfoTable,
+        eq(usersTable.id, userFinancialInfoTable.userId),
+      );
 
-    return user ? new UserEntity(user) : null;
+    if (!user) {
+      return null;
+    }
+
+    const financialData = new UserFinancialInfoEntity({
+      userId: user.users.id,
+      wage: new Decimal(user.user_financial_info?.wage ?? 0),
+    });
+
+    return new UserEntity({
+      ...user.users,
+      financialData,
+    });
   }
 
   async findByExample(
@@ -42,8 +59,28 @@ export class UsersRepository implements UsersRepositoryInterface {
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-    const [user] = await this.db.select().from(usersTable).where(whereClause);
+    const [user] = await this.db
+      .select()
+      .from(usersTable)
+      .where(whereClause)
+      .leftJoin(
+        userFinancialInfoTable,
+        eq(usersTable.id, userFinancialInfoTable.userId),
+      )
+      .limit(1);
 
-    return user ? new UserEntity(user) : null;
+    if (!user) {
+      return null;
+    }
+
+    const financialData = new UserFinancialInfoEntity({
+      userId: user.users.id,
+      wage: new Decimal(user.user_financial_info?.wage ?? 0),
+    });
+
+    return new UserEntity({
+      ...user.users,
+      financialData,
+    });
   }
 }

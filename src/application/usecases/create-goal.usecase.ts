@@ -3,24 +3,27 @@ import {
   CreateGoalUseCaseInterface,
   CreateGoalUseCaseOutput,
   GoalsRepositoryInterface,
-  UsersRepositoryInterface,
+  ShouldWarnGoalsAmountUseCaseInterface,
 } from '../interfaces';
 
 export class CreateGoalUseCase implements CreateGoalUseCaseInterface {
   constructor(
-    private readonly usersRepository: UsersRepositoryInterface,
     private readonly goalsRepository: GoalsRepositoryInterface,
+    private readonly shouldWarnGoalsAmountUseCase: ShouldWarnGoalsAmountUseCaseInterface,
   ) {}
 
   async execute(
     input: CreateGoalUseCaseInput,
   ): Promise<CreateGoalUseCaseOutput> {
-    const user = await this.usersRepository.findById(input.userId);
+    const goal = await this.goalsRepository.create(input);
 
-    if (!user) {
-      throw new Error('User not found');
-    }
+    const { shouldWarn } = await this.shouldWarnGoalsAmountUseCase.execute({
+      userId: input.userId,
+    });
 
-    return await this.goalsRepository.create(input);
+    return {
+      goal,
+      shouldWarnAboutGoalsAmount: shouldWarn,
+    };
   }
 }

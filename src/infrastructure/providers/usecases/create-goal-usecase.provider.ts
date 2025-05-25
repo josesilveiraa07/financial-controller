@@ -1,17 +1,17 @@
 import { Provider } from '@nestjs/common';
-import { CreateGoalUseCase } from 'src/application/usecases';
 import {
-  GoalsRepository,
-  UsersRepository,
-} from 'src/infrastructure/repositories';
+  CreateGoalUseCase,
+  ShouldWarnGoalsAmountUseCase,
+} from 'src/application/usecases';
+import { GoalsRepository } from 'src/infrastructure/repositories';
 
 export const CreateGoalUseCaseProvider: Provider = {
   provide: CreateGoalUseCase,
-  inject: [UsersRepository, GoalsRepository],
+  inject: [GoalsRepository, ShouldWarnGoalsAmountUseCase],
   useFactory: (
-    usersRepository: UsersRepository,
     goalsRepository: GoalsRepository,
+    shouldWarnGoalsAmountUseCase: ShouldWarnGoalsAmountUseCase,
   ) => {
-    return new CreateGoalUseCase(usersRepository, goalsRepository);
+    return new CreateGoalUseCase(goalsRepository, shouldWarnGoalsAmountUseCase);
   },
 };

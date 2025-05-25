@@ -9,4 +9,5 @@ export type CreateGoalInput = {
 
 export interface GoalsRepositoryInterface {
   create(data: CreateGoalInput): Promise<GoalEntity>;
+  findManyByUserId(userId: string): Promise<GoalEntity[]>;
 }
