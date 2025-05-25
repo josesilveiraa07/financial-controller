@@ -1,5 +1,5 @@
 import Decimal from 'decimal.js';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import {
   CreateGoalInput,
@@ -10,11 +10,20 @@ import { goalsTable } from '../drizzle/schemas';
 
 export class GoalsRepository implements GoalsRepositoryInterface {
   constructor(private readonly db: NodePgDatabase) {}
-  async findManyByUserId(userId: string): Promise<GoalEntity[]> {
+  async findManyByUserId(
+    userId: string,
+    done?: boolean,
+  ): Promise<GoalEntity[]> {
+    const conditions = [eq(goalsTable.userId, userId)];
+
+    if (done !== null && done !== undefined) {
+      conditions.push(eq(goalsTable.done, done));
+    }
+
     const goals = await this.db
       .select()
       .from(goalsTable)
-      .where(eq(goalsTable.userId, userId));
+      .where(and(...conditions));
 
     return goals.map(
       (goal) =>
@@ -22,6 +31,7 @@ export class GoalsRepository implements GoalsRepositoryInterface {
           id: goal.id,
           name: goal.name,
           value: new Decimal(goal.value),
+          done: goal.done,
           userId: goal.userId!,
           createdAt: goal.createdAt,
           updatedAt: goal.updatedAt,
@@ -44,6 +54,7 @@ export class GoalsRepository implements GoalsRepositoryInterface {
       name: goal.name,
       value: new Decimal(goal.value),
       userId: goal.userId!,
+      done: goal.done,
       createdAt: goal.createdAt,
       updatedAt: goal.updatedAt,
     });

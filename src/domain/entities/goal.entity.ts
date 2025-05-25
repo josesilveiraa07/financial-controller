@@ -5,6 +5,7 @@ export class GoalEntity {
   userId: string;
   name: string;
   value: Decimal;
+  done: boolean;
   createdAt: Date;
   updatedAt: Date;
 

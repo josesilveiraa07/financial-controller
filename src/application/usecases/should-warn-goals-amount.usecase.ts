@@ -28,9 +28,12 @@ export class ShouldWarnGoalsAmountUseCase
       throw new Error('User financial data not found');
     }
 
-    const userGoals = await this.goalsRepository.findManyByUserId(input.userId);
+    const notDoneUserGoals = await this.goalsRepository.findManyByUserId(
+      input.userId,
+      false,
+    );
 
-    const totalUserGoalsValue = userGoals.reduce(
+    const totalUserGoalsValue = notDoneUserGoals.reduce(
       (acc, goal) => acc.add(goal.value),
       new Decimal(0),
     );

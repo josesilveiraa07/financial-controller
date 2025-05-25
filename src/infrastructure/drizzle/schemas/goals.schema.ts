@@ -1,5 +1,6 @@
 import { relations } from 'drizzle-orm';
 import {
+  boolean,
   decimal,
   pgTable,
   timestamp,
@@ -13,6 +14,7 @@ export const goalsTable = pgTable('goals', {
   userId: uuid('user_id').references(() => usersTable.id),
   name: varchar('name', { length: 255 }).notNull(),
   value: decimal('value', { precision: 10, scale: 2 }).notNull(),
+  done: boolean('done').notNull().default(false),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
