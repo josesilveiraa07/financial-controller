@@ -24,6 +24,10 @@ export class ShouldWarnGoalsAmountUseCase
       throw new Error('User not found');
     }
 
+    if (!user.financialData) {
+      throw new Error('User financial data not found');
+    }
+
     const userGoals = await this.goalsRepository.findManyByUserId(input.userId);
 
     const totalUserGoalsValue = userGoals.reduce(
@@ -32,7 +36,7 @@ export class ShouldWarnGoalsAmountUseCase
     );
 
     return {
-      shouldWarn: totalUserGoalsValue.gte(user.financialData?.wage ?? 0),
+      shouldWarn: totalUserGoalsValue.gte(user.financialData.wage),
     };
   }
 }
