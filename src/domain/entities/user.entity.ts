@@ -1,3 +1,4 @@
+import { IncomeEntity } from './income.entity';
 import { UserFinancialInfoEntity } from './user-financial-info.entity';
 
 export class UserEntity {
@@ -7,6 +8,7 @@ export class UserEntity {
   lastName: string;
   password: string;
   financialData?: UserFinancialInfoEntity;
+  incomes?: IncomeEntity[];
   createdAt: Date;
   updatedAt: Date;
 
